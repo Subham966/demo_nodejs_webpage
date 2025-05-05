@@ -67,7 +67,7 @@ jobs:
       - run:
           name: Deploy to Remote Server
           command: |
-            ssh -o StrictHostKeyChecking=no ubuntu@103.185.243.213 << 'EOF'
+            ssh -o StrictHostKeyChecking=no ubuntu@103.185.243.213 \<< 'EOF'
               docker pull subham966/nodejswebapp1:latest
               docker rm -f nodejs123 || true
               docker run -d --name nodejs123 -p 8081:8081 subham966/nodejswebapp1:latest
