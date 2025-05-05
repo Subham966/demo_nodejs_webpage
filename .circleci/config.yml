@@ -19,11 +19,16 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
-          name: Build Docker image
+          name: Set Docker image version
           command: |
-            docker build -t nodejswebapp1 -t subham966/nodejswebapp1:latest .
+            echo "export VERSION=1.0" >> $BASH_ENV
+      - run:
+          name: Build and Push Docker image with version tag
+          command: |
+            source $BASH_ENV
+            docker build -t nodejswebapp1:$VERSION -t subham966/nodejswebapp1:$VERSION .
             echo $DOCKER_PASSWORD | docker login -u subham966 --password-stdin
-            docker push subham966/nodejswebapp1:latest
+            docker push subham966/nodejswebapp1:$VERSION
 
 workflows:
   version: 2
@@ -33,7 +38,6 @@ workflows:
       - build_docker_image:
           requires:
             - build_test
-
 
 #========================================================================================================================
 
