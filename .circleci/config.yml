@@ -15,7 +15,6 @@ jobs:
       - image: circleci/node:12
     steps:
       - checkout
-      - setup_remote_docker:
       - run:
           name: Build and Push Docker Image with Version Tag
           command: |
@@ -42,6 +41,7 @@ workflows:
       - build_docker_image:
           requires:
             - build_test
+
           
 
 #========================================================================================================================
