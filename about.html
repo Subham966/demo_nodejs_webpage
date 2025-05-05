@@ -8,11 +8,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Simulate fetching subscriber count
-            var subscriberCount = 105000; // Example count
+            var subscriberCount = 105000;
             $('#subscriberCount').text(subscriberCount);
 
-            // Handle form submission
             $('#joinForm').submit(function (event) {
                 event.preventDefault();
                 var email = $('#email').val();
@@ -24,10 +22,9 @@
                 }
             });
 
-            // Load additional content dynamically
             $('#loadMore').click(function () {
                 $.ajax({
-                    url: 'additional_content.html', // URL to load additional content
+                    url: 'additional_content.html',
                     success: function (data) {
                         $('#additionalContent').html(data);
                     },
@@ -43,7 +40,7 @@
     <div style="margin:6px;">
         <nav class="navbar navbar-inverse navbar-static-top">
             <div class="container">
-                <a class="navbar-brand" href="/">About DevOps Shack</a>
+                <a class="navbar-brand" href="/">About DevOps CICD</a>
                 <ul class="nav navbar-nav">
                     <li>
                         <a href="/">Home</a>
@@ -57,7 +54,7 @@
         <div class="jumbotron" style="padding:40px;">
             <h1>About Us</h1>
             <strong>
-                <p>DevOps Shack is a YouTube Channel created to share DevOps implementations and guide on using best practices to build & deploy applications.</p>
+                <p>DevOps CICD is a YouTube Channel created to share DevOps implementations and guide on using best practices to build & deploy applications.</p>
             </strong>
             <p>Join our community and stay updated with the latest in DevOps!</p>
             <p>Current Subscribers: <span id="subscriberCount"></span></p>
