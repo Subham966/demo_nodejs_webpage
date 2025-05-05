@@ -1,3 +1,38 @@
+# version: 2.1
+
+# jobs:
+#   build_test:
+#     docker:
+#       - image: circleci/node:12
+#     steps:
+#       - checkout
+#       - run:
+#           name: Install npm dependencies
+#           command: |
+#             npm install --save
+
+#   build_docker_image:
+#     docker:
+#       - image: circleci/node:12
+#     steps:
+#       - checkout
+#       - setup_remote_docker:
+#           docker_layer_caching: false
+#       - run:
+#           name: Build Docker image
+#           command: |
+#             docker build -t nodejswebapp1 -t subham966/nodejswebapp1:latest .
+#             echo $DOCKER_PASSWORD | docker login -u subham966 --password-stdin
+#             docker push subham966/nodejswebapp1:latest
+
+# workflows:
+#   version: 2
+#   build_and_push:
+#     jobs:
+#       - build_test
+#       - build_docker_image:
+#           requires:
+#             - build_test
 version: 2.1
 
 jobs:
@@ -8,28 +43,44 @@ jobs:
       - checkout
       - run:
           name: Install npm dependencies
-          command: |
-            npm install --save
+          command: npm install --save
 
-  build_docker_image:
+  build_and_push:
     docker:
       - image: circleci/node:12
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: false
+      - setup_remote_docker
       - run:
-          name: Build Docker image
+          name: Build and Push Docker Image
           command: |
-            docker build -t nodejswebapp1 -t subham966/nodejswebapp1:latest .
+            docker build -t subham966/nodejswebapp1:latest .
             echo $DOCKER_PASSWORD | docker login -u subham966 --password-stdin
             docker push subham966/nodejswebapp1:latest
 
+  deploy:
+    machine: true
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:CzQXdqwocFvy4Hz2EKn/01PnuIipFNdouqMntfZAdGg"
+      - run:
+          name: Deploy to Remote Server
+          command: |
+            ssh -o StrictHostKeyChecking=no ubuntu@103.185.243.213 << 'EOF'
+              docker pull subham966/nodejswebapp1:latest
+              docker rm -f nodejs123 || true
+              docker run -d --name nodejs123 -p 8081:8081 subham966/nodejswebapp1:latest
+            EOF
+
 workflows:
   version: 2
-  build_and_push:
+  build_test_and_deploy:
     jobs:
       - build_test
-      - build_docker_image:
+      - build_and_push:
           requires:
             - build_test
+      - deploy:
+          requires:
+            - build_and_push
