@@ -32,13 +32,18 @@ workflows:
       - build_test:
           filters:
             branches:
-              only: manual-trigger
+              only:
+                - manual-trigger
+                - main
       - build_docker_image:
           requires:
             - build_test
           filters:
             branches:
-              only: manual-trigger
+              only:
+                - manual-trigger
+                - main
+
             
 #========================================================================================================================
 
